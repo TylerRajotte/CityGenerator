@@ -6,26 +6,23 @@ class Mesh:
         """Data structure [[pointx, pointy], [pointx, pointy]...]
         Pixerange structure [minx, miny, maxx, maxy]"""
         # Takes in cords and outputs them to pixel values then uses those to make pygame lines
-
         self.inputdata = data
         self.pixelrange = pixelrange
         self.color = color
         self.completemesh = completemesh
         self.width = width
 
+        self.flipyvalues()
         self.pixeldata = []
         self.__rendertopixel()
-
-        # for x in range(len(self.inputdata)):
-        #     print("{} --> {}".format(self.inputdata[x], self.normalizeddata[x]))
 
     def __rendertopixel(self):
         # Takes in cord data and outputs pixel values
         maxandmin = self.__findmaxandmin()
-        nonegatives = []
         for x in self.inputdata:
             xvalue = x[0]
             yvalue = x[1]
+
             # Elimanate negative numbers if they are there
             if maxandmin[0] < 0:
                 xvalue = x[0] + (maxandmin[0] * -1)
@@ -33,7 +30,7 @@ class Mesh:
             if maxandmin[1] < 0:
                 yvalue = x[1] + (maxandmin[1] * -1)
 
-            # Check if zero / scale values to between 0 and 1
+            # Check if zero and scale values to between 0 and 1
             if maxandmin[2] + (maxandmin[0] * -1) == 0:
                 xvalue = 0
             else:
@@ -64,6 +61,10 @@ class Mesh:
 
         final = (min(allofx), min(allofy), max(allofx), max(allofy))
         return final
+
+    def flipyvalues(self):
+        for x in range(len(self.inputdata)):
+            self.inputdata[x] = (self.inputdata[x][0], self.inputdata[x][1] * -1)
 
     def readoutmesh(self, plane):
         # Pygame render code that can be called repeatedly

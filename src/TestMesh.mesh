@@ -1,0 +1,11 @@
+color=255 0 0
+linewidth=5
+complete=true
+2 0
+1 2
+0 2
+-1 2
+-2 0
+-1 -2
+0 -2
+1 -2

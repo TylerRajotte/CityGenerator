@@ -1,24 +1,17 @@
 import pygame
-from mesh import *
+from mesh import Mesh
+from filereader import FileReader
 
 
-class Window:
+class Engine:
     def __init__(self, windowxsize, windowysize):
         pygame.init()
         self.screen = pygame.display.set_mode((windowxsize, windowysize))
         self.clock = pygame.time.Clock()
         self.loopFinished = False
+        self.drawMeshList = []
 
-        meshdata = [[2, 0], [1, 2], [0, 2], [-1, 2], [-2, 0], [-1, -2], [0, -2], [1, -2]]
-        # pixelrange = [0, 0, windowxsize, windowysize]
-        # meshdata = [[-1, 1], [1, -1]]
-        pixelrange = [100, 100, 300, 300]
-
-        self.newmesh = Mesh(meshdata, pixelrange, (255, 0, 0), True, 5)
-
-        self.__mainloop()
-
-    def __mainloop(self):
+    def mainloop(self):
         while not self.loopFinished:
             self.__handleevents()
             self.__draw()
@@ -32,6 +25,23 @@ class Window:
 
     def __draw(self):
         self.screen.fill((0, 0, 0))
-        self.newmesh.readoutmesh(self.screen)
+        for x in self.drawMeshList:
+            x.readoutmesh(self.screen)
 
+    def addmesh(self, meshfilelocation, pixelrange):
+        meshfile = FileReader(meshfilelocation, "read")
+        meshdata = []
+        color = [255, 255, 255]
+        complete = False
+        width = 1
+        for x in meshfile.fileOutput:
+            if "color" in x:
+                color = list(map(int, x.split("=")[1].split(" ")))
+            elif "linewidth" in x:
+                width = int(x.split("=")[1])
+            elif "complete" in x:
+                complete = bool(x.split("=")[1])
+            else:
+                meshdata.append(list(map(int, x.split(" "))))
 
+        self.drawMeshList.append(Mesh(meshdata, pixelrange, color, complete, width))
