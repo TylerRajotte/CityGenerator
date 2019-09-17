@@ -1,5 +1,7 @@
 import pygame
-from mesh import Mesh
+from primatives.mesh import Mesh
+from primatives.point import Point
+from primatives.line import Line
 from filereader import FileReader
 
 
@@ -9,7 +11,11 @@ class Engine:
         self.screen = pygame.display.set_mode((windowxsize, windowysize))
         self.clock = pygame.time.Clock()
         self.loopFinished = False
+
+        # Draw Lists
         self.drawMeshList = []
+        self.drawPointList = []
+        self.drawLineList = []
 
     def mainloop(self):
         while not self.loopFinished:
@@ -26,7 +32,11 @@ class Engine:
     def __draw(self):
         self.screen.fill((0, 0, 0))
         for x in self.drawMeshList:
-            x.readoutmesh(self.screen)
+            x.readout(self.screen)
+        for x in self.drawPointList:
+            x.readout(self.screen)
+        for x in self.drawLineList:
+            x.readout(self.screen)
 
     def addmesh(self, meshfilelocation, pixelrange):
         meshfile = FileReader(meshfilelocation, "read")
@@ -45,3 +55,9 @@ class Engine:
                 meshdata.append(list(map(int, x.split(" "))))
 
         self.drawMeshList.append(Mesh(meshdata, pixelrange, color, complete, width))
+
+    def addpoint(self, xpos, ypos, color, size):
+        self.drawPointList.append(Point(xpos, ypos, color, size))
+
+    def addline(self, xpos1, ypos1, xpos2, ypos2, color, width):
+        self.drawLineList.append(Line(xpos1, ypos1, xpos2, ypos2, color, width))

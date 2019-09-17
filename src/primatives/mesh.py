@@ -66,6 +66,6 @@ class Mesh:
         for x in range(len(self.inputdata)):
             self.inputdata[x] = (self.inputdata[x][0], self.inputdata[x][1] * -1)
 
-    def readoutmesh(self, plane):
+    def readout(self, plane):
         # Pygame render code that can be called repeatedly
         pygame.draw.lines(plane, self.color, self.completemesh, self.pixeldata, self.width)
